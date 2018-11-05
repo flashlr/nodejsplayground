@@ -1,181 +1,185 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>OXFam Wo(man)4 Walk</title>
-		
 
-		<link rel="stylesheet" href="css/oxfam.css" />
+<head>
+	<title>OXFam Wo(man)4 Walk</title>
 
-		<script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyDuWl0HoRUO2mUXAePuLIW7-6juYYhHZB4"></script>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
-		<script type="text/javascript">
-			var allTextLines;
-			var lines = [];
-			var points= [];
-			var map;
-			var bounds;
-			var currentpoint;
-			var lastdate;
-			function processData(allText)
-			{
 
-				// or however many elements there are in each row
-				allTextLines = allText.split(/\r\n|\n/);
-				bounds = new google.maps.LatLngBounds();
-				 points = [];
-				
-				for ( i = 0; i < allTextLines.length; i++)
-				{
-					var curline = allTextLines[i].split(';');
+	<link rel="stylesheet" href="css/oxfam.css" />
+
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyDuWl0HoRUO2mUXAePuLIW7-6juYYhHZB4"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+	<script type="text/javascript">
+		var allTextLines;
+		var lines = [];
+		var points = [];
+		var map;
+		var bounds;
+		var currentpoint;
+		var lastdate;
+		function processData(allText) {
+
+			// or however many elements there are in each row
+			allTextLines = allText.split(/\r\n|\n/);
+			bounds = new google.maps.LatLngBounds();
+			points = [];
+
+			for (i = 0; i < allTextLines.length; i++) {
+
+				var curline = allTextLines[i].split(';');
+				if (curline.length == 3) {
+
 					lines.push(allTextLines[i].split(';'));
+
 
 					var lat = curline[0];
 					var lon = curline[1];
 					lastdate = curline[2];
 					var p = new google.maps.LatLng(lat, lon);
 					points.push(p);
-					currentpoint=p;
+					currentpoint = p;
 					bounds.extend(p);
 				}
-
-				var poly = new google.maps.Polyline(
-				{
-					// use your own style here
-					path : points,
-					strokeColor : "#3CFF33",
-					strokeOpacity : 1,
-					strokeWeight : 10
-				});
-
-				poly.setMap(map);
-
-
-//convert lastDate;
-var mydate = new Date(lastdate);
-console.log(mydate.toDateString());
-
-				// fit bounds to track
-				map.fitBounds(bounds);
- map.setCenter(currentpoint);
- var imgurl="/img/image3.png";
-  var marker = new google.maps.Marker({
-          position: currentpoint,
-          map: map,
-          title: 'Woman 4 Walk à  '+ mydate.toLocaleTimeString(),
-          icon: imgurl
-        });
-        
-				//alert(lines);
-				/*
-				while (entries.length>0) {
-				var tarr = [];
-				for (var j=0; j<record_num; j++) {
-				tarr.push(headings[j]+":"+entries.shift());
-				}
-				lines.push(tarr);
-				}
-				*/
-				//  alert(lines);
 			}
 
-			function initialize()
-			{
-				
-				  map = new google.maps.Map(document.getElementById("map"), {
-				 mapTypeId: google.maps.MapTypeId.ROADMAP
-				 });
-
-				 
-				$.ajax(
+			var poly = new google.maps.Polyline(
 				{
-					type : "GET",
-					url : "/otw_2016_finaldraft_0.gpx",
-					dataType : "xml",
-					success : function(xml)
-					{
-						
-						 var points = [];
-						 var bounds = new google.maps.LatLngBounds ();
-						 $(xml).find("trkpt").each(function() {
-						 var lat = $(this).attr("lat");
-						 var lon = $(this).attr("lon");
-						 var p = new google.maps.LatLng(lat, lon);
-						 points.push(p);
-						 bounds.extend(p);
-						 });
-
-						 var poly = new google.maps.Polyline({
-						 // use your own style here
-						 path: points,
-						 strokeColor: "#FF00AA",
-						 strokeOpacity: .7,
-						 strokeWeight: 4
-						 });
-
-						 poly.setMap(map);
-
-						 // fit bounds to track
-						 map.fitBounds(bounds);
-						 
-					}
+					// use your own style here
+					path: points,
+					strokeColor: "#3CFF33",
+					strokeOpacity: 1,
+					strokeWeight: 10
 				});
 
-				//Create now the second layer
-				/*
-				 $.ajax({
-				 type: "GET",
-				 url: "/parcours1.gpx",
-				 dataType: "xml",
-				 success: function(xml) {
-				 var points = [];
-				 var bounds = new google.maps.LatLngBounds ();
-				 $(xml).find("trkpt").each(function() {
-				 var lat = $(this).attr("lat");
-				 var lon = $(this).attr("lon");
-				 var p = new google.maps.LatLng(lat, lon);
-				 points.push(p);
-				 bounds.extend(p);
-				 });
+			poly.setMap(map);
 
-				 var poly = new google.maps.Polyline({
-				 // use your own style here
-				 path: points,
-				 strokeColor: "#CCFFAA",
-				 strokeOpacity: .7,
-				 strokeWeight: 10
-				 });
 
-				 poly.setMap(map);
+			//convert lastDate;
+			//var mydate = new Date(lastdate);
+			//console.log(mydate.toDateString());
 
-				 // fit bounds to track
-				 map.fitBounds(bounds);
+			// fit bounds to track
+			map.fitBounds(bounds);
+			map.setCenter(currentpoint);
+			var imgurl = "/img/image3.png";
+			var marker = new google.maps.Marker({
+				position: currentpoint,
+				map: map,
+				title: 'Woman 4 Walk à  ',
+				//+ mydate.toLocaleTimeString(),
+				icon: imgurl
+			});
 
-				 }
+			//alert(lines);
+			/*
+			while (entries.length>0) {
+			var tarr = [];
+			for (var j=0; j<record_num; j++) {
+			tarr.push(headings[j]+":"+entries.shift());
+			}
+			lines.push(tarr);
+			}
+			*/
+			//  alert(lines);
+		}
 
-				 });
+		function initialize() {
 
-				 */
-				$.ajax(
+			map = new google.maps.Map(document.getElementById("map"), {
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			});
+
+			/*
+		   $.ajax(
+		   {
+			   type : "GET",
+			   url : "/otw_2016_finaldraft_0.gpx",
+			   dataType : "xml",
+			   success : function(xml)
+			   {
+			   	
+					var points = [];
+					var bounds = new google.maps.LatLngBounds ();
+					$(xml).find("trkpt").each(function() {
+					var lat = $(this).attr("lat");
+					var lon = $(this).attr("lon");
+					var p = new google.maps.LatLng(lat, lon);
+					points.push(p);
+					bounds.extend(p);
+					});
+
+					var poly = new google.maps.Polyline({
+					// use your own style here
+					path: points,
+					strokeColor: "#FF00AA",
+					strokeOpacity: .7,
+					strokeWeight: 4
+					});
+
+					poly.setMap(map);
+
+					// fit bounds to track
+					map.fitBounds(bounds);
+				    
+			   }
+		   });
+*/
+			//Create now the second layer
+			/*
+			 $.ajax({
+			 type: "GET",
+			 url: "/parcours1.gpx",
+			 dataType: "xml",
+			 success: function(xml) {
+			 var points = [];
+			 var bounds = new google.maps.LatLngBounds ();
+			 $(xml).find("trkpt").each(function() {
+			 var lat = $(this).attr("lat");
+			 var lon = $(this).attr("lon");
+			 var p = new google.maps.LatLng(lat, lon);
+			 points.push(p);
+			 bounds.extend(p);
+			 });
+
+			 var poly = new google.maps.Polyline({
+			 // use your own style here
+			 path: points,
+			 strokeColor: "#CCFFAA",
+			 strokeOpacity: .7,
+			 strokeWeight: 10
+			 });
+
+			 poly.setMap(map);
+
+			 // fit bounds to track
+			 map.fitBounds(bounds);
+
+			 }
+
+			 });
+
+			 */
+			$.ajax(
 				{
-					type : "GET",
-					url : "/parcours2.csv",
-					dataType : "text",
-					success : function(data)
-					{
+					type: "GET",
+					url: "/gpx",
+					dataType: "text",
+					success: function (data) {
 						processData(data);
 					},
-					error : function(xhr, ajaxOptions, thrownError)
-					{
+					error: function (xhr, ajaxOptions, thrownError) {
 						alert("Status: " + xhr.status + "     Error: " + thrownError);
 					}
 				});
-			}
-		</script>
-	</head>
-	<body onload="initialize()">
+		}
+	</script>
+</head>
 
-		<h3>My Google Maps Demo</h3>
-		<div id="map"></div>
+<body onload="initialize()">
 
-	</body>
+	<h3>My Google Maps Demo</h3>
+	<div id="map"></div>
+
+</body>
+
 </html>
